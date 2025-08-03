@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maintenance System - Sign Up</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .auth-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            color: #7f8c8d;
+            font-size: 1.1em;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="password"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+
+        select {
+            cursor: pointer;
+        }
+
+        .role-production {
+            background-color: #e8f5e8;
+            border-color: #4caf50;
+        }
+
+        .role-maintenance {
+            background-color: #e3f2fd;
+            border-color: #2196f3;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.2em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .auth-link {
+            text-align: center;
+            margin-top: 20px;
+            color: #7f8c8d;
+        }
+
+        .auth-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .auth-link a:hover {
+            color: #764ba2;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #c3e6cb;
+            display: none;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #f5c6cb;
+            display: none;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .form-animation {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-group:nth-child(1) { animation-delay: 0.1s; }
+        .form-group:nth-child(2) { animation-delay: 0.2s; }
+        .form-group:nth-child(3) { animation-delay: 0.3s; }
+        .form-group:nth-child(4) { animation-delay: 0.4s; }
+        .form-group:nth-child(5) { animation-delay: 0.5s; }
+        .form-group:nth-child(6) { animation-delay: 0.6s; }
+
+        .password-requirements {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+            line-height: 1.4;
+        }
+
+        .role-description {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+            padding: 10px;
+            border-radius: 8px;
+            background: rgba(0,0,0,0.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="header">
+            <h1>🔧 Join Our Team</h1>
+            <p>Create your maintenance system account</p>
+        </div>
+
+        <div class="success-message" id="successMessage">
+            ✅ Account created successfully! Please login to continue.
+        </div>
+
+        <div class="error-message" id="errorMessage">
+            ❌ <span id="errorText">Error creating account. Please try again.</span>
+        </div>
+
+        <div class="loading" id="loadingSpinner">
+            <div class="spinner"></div>
+            <p>Creating account...</p>
+        </div>
+
+        <form id="signupForm">
+            <div class="form-group form-animation">
+                <label for="fullName">Full Name *</label>
+                <input type="text" id="fullName" name="fullName" required 
+                       placeholder="Enter your full name">
+            </div>
+
+            <div class="form-group form-animation">
+                <label for="email">Email Address *</label>
+                <input type="email" id="email" name="email" required 
+                       placeholder="Enter your email address">
+            </div>
+
+            <div class="form-group form-animation">
+                <label for="password">Password *</label>
+                <input type="password" id="password" name="password" required 
+                       placeholder="Create a strong password">
+                <div class="password-requirements">
+                    Password must be at least 6 characters long
+                </div>
+            </div>
+
+            <div class="form-group form-animation">
+                <label for="confirmPassword">Confirm Password *</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" required 
+                       placeholder="Confirm your password">
+            </div>
+
+            <div class="form-group form-animation">
+                <label for="role">Your Role *</label>
+                <select id="role" name="role" required>
+                    <option value="">Select your role</option>
+                    <option value="production">Production Manager (Submit Complaints)</option>
+                    <option value="maintenance">Maintenance Manager (Handle Complaints)</option>
+                </select>
+                <div class="role-description" id="roleDescription" style="display: none;">
+                    <!-- Role description will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <div class="form-group form-animation">
+                <button type="submit" class="submit-btn">Create Account</button>
+            </div>
+        </form>
+
+        <div class="auth-link">
+            Already have an account? <a href="login.html">Login here</a>
+        </div>
+    </div>
+
+    <script>
+        // API configuration
+        const API_BASE_URL = 'http://localhost:3000/api';
+
+        // Form elements
+        const form = document.getElementById('signupForm');
+        const roleSelect = document.getElementById('role');
+        const roleDescription = document.getElementById('roleDescription');
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirmPassword');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const successMessage = document.getElementById('successMessage');
+        const errorMessage = document.getElementById('errorMessage');
+        const errorText = document.getElementById('errorText');
+
+        // Role descriptions
+        const roleDescriptions = {
+            production: "🏭 As a Production Manager, you can submit maintenance complaints when machines need attention. You'll have access to the complaint submission form.",
+            maintenance: "🔧 As a Maintenance Manager, you can view, update, and manage all maintenance complaints. You'll have access to the complaints dashboard."
+        };
+
+        // Role color changes and descriptions
+        roleSelect.addEventListener('change', function() {
+            this.className = '';
+            roleDescription.style.display = 'none';
+            
+            if (this.value === 'production') {
+                this.classList.add('role-production');
+                roleDescription.textContent = roleDescriptions.production;
+                roleDescription.style.display = 'block';
+            } else if (this.value === 'maintenance') {
+                this.classList.add('role-maintenance');
+                roleDescription.textContent = roleDescriptions.maintenance;
+                roleDescription.style.display = 'block';
+            }
+        });
+
+        // Password confirmation validation
+        confirmPasswordInput.addEventListener('input', function() {
+            if (passwordInput.value !== this.value) {
+                this.setCustomValidity('Passwords do not match');
+            } else {
+                this.setCustomValidity('');
+            }
+        });
+
+        passwordInput.addEventListener('input', function() {
+            if (confirmPasswordInput.value && this.value !== confirmPasswordInput.value) {
+                confirmPasswordInput.setCustomValidity('Passwords do not match');
+            } else {
+                confirmPasswordInput.setCustomValidity('');
+            }
+        });
+
+        // API utility functions
+        const api = {
+            async post(endpoint, data) {
+                const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error || 'Network error');
+                }
+                
+                return response.json();
+            }
+        };
+
+        // Form submission
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Hide previous messages
+            successMessage.style.display = 'none';
+            errorMessage.style.display = 'none';
+            
+            // Validate passwords match
+            if (passwordInput.value !== confirmPasswordInput.value) {
+                errorText.textContent = 'Passwords do not match';
+                errorMessage.style.display = 'block';
+                return;
+            }
+
+            // Validate password length
+            if (passwordInput.value.length < 6) {
+                errorText.textContent = 'Password must be at least 6 characters long';
+                errorMessage.style.display = 'block';
+                return;
+            }
+            
+            // Show loading
+            loadingSpinner.style.display = 'block';
+            
+            // Disable submit button
+            const submitBtn = form.querySelector('.submit-btn');
+            submitBtn.disabled = true;
+            
+            try {
+                // Get form data
+                const formData = new FormData(form);
+                const userData = {
+                    fullName: formData.get('fullName'),
+                    email: formData.get('email'),
+                    password: formData.get('password'),
+                    role: formData.get('role')
+                };
+
+                // Submit to backend
+                const result = await api.post('/auth/signup', userData);
+                
+                // Show success message
+                loadingSpinner.style.display = 'none';
+                successMessage.style.display = 'block';
+                
+                // Reset form
+                form.reset();
+                roleSelect.className = '';
+                roleDescription.style.display = 'none';
+                
+                // Redirect to login after 2 seconds
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 2000);
+                
+                console.log('Account created successfully:', result);
+                
+            } catch (error) {
+                console.error('Error creating account:', error);
+                
+                // Show error message
+                loadingSpinner.style.display = 'none';
+                errorText.textContent = error.message || 'Error creating account. Please try again.';
+                errorMessage.style.display = 'block';
+                
+            } finally {
+                // Re-enable submit button
+                submitBtn.disabled = false;
+            }
+        });
+
+        // Check if backend is running
+        async function checkBackendConnection() {
+            try {
+                const response = await fetch(`${API_BASE_URL.replace('/api', '')}/`);
+                if (response.ok) {
+                    console.log('Backend connection successful');
+                } else {
+                    console.warn('Backend might not be running');
+                }
+            } catch (error) {
+                console.warn('Cannot connect to backend. Make sure the server is running on port 3000');
+            }
+        }
+
+        // Check backend connection on page load
+        window.addEventListener('load', checkBackendConnection);
+    </script>
+</body>
+</html>

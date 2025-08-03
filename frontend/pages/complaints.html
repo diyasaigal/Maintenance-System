@@ -1,0 +1,770 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maintenance System - Submit Complaint</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 600px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            color: #7f8c8d;
+            font-size: 1.1em;
+        }
+
+        .nav-back {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .nav-back:hover {
+            color: #764ba2;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+
+        input[type="text"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        input[type="text"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+            font-family: inherit;
+        }
+
+        select {
+            cursor: pointer;
+        }
+
+        .priority-high {
+            background-color: #ffebee;
+            border-color: #f44336;
+        }
+
+        .priority-medium {
+            background-color: #fff3e0;
+            border-color: #ff9800;
+        }
+
+        .priority-low {
+            background-color: #e8f5e8;
+            border-color: #4caf50;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.2em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #c3e6cb;
+            display: none;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #f5c6cb;
+            display: none;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .form-animation {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-group:nth-child(1) { animation-delay: 0.1s; }
+        .form-group:nth-child(2) { animation-delay: 0.2s; }
+        .form-group:nth-child(3) { animation-delay: 0.3s; }
+        .form-group:nth-child(4) { animation-delay: 0.4s; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../index.html" class="nav-back">← Back to Dashboard</a>
+        
+        <div class="header">
+            <h1>🔧 Maintenance System</h1>
+            <p>Submit a Machine Complaint</p>
+        </div>
+
+        <div class="success-message" id="successMessage">
+            ✅ Complaint submitted successfully! Ticket ID: <span id="ticketId"></span>
+        </div>
+
+        <div class="error-message" id="errorMessage">
+            ❌ <span id="errorText">Error submitting complaint. Please try again.</span>
+        </div>
+
+        <div class="loading" id="loadingSpinner">
+            <div class="spinner"></div>
+            <p>Submitting complaint...</p>
+        </div>
+
+        <form id="complaintForm">
+            <div class="form-group form-animation">
+                <label for="machineName">Machine Name *</label>
+                <input type="text" id="machineName" name="machineName" required 
+                       placeholder="e.g., Conveyor Belt #3, Hydraulic Press A1">
+            </div>
+
+            <div class="form-group form-animation">
+                <label for="complaintDescription">Complaint Description *</label>
+                <textarea id="complaintDescription" name="complaintDescription" required 
+                          placeholder="Please describe the issue in detail..."></textarea>
+            </div>
+
+            <div class="form-group form-animation">
+                <label for="priority">Priority Level *</label>
+                <select id="priority" name="priority" required>
+                    <option value="">Select Priority</option>
+                    <option value="high">High - Immediate attention required</option>
+                    <option value="medium">Medium - Needs attention soon</option>
+                    <option value="low">Low - Can wait for scheduled maintenance</option>
+                </select>
+            </div>
+
+            <div class="form-group form-animation">
+                <button type="submit" class="submit-btn">Submit Complaint</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // API configuration
+        const API_BASE_URL = 'http://localhost:3000/api';
+
+        // Form elements
+        const form = document.getElementById('complaintForm');
+        const prioritySelect = document.getElementById('priority');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const successMessage = document.getElementById('successMessage');
+        const errorMessage = document.getElementById('errorMessage');
+        const errorText = document.getElementById('errorText');
+
+        // Priority color changes
+        prioritySelect.addEventListener('change', function() {
+            this.className = '';
+            if (this.value === 'high') {
+                this.classList.add('priority-high');
+            } else if (this.value === 'medium') {
+                this.classList.add('priority-medium');
+            } else if (this.value === 'low') {
+                this.classList.add('priority-low');
+            }
+        });
+
+        // API utility functions
+        const api = {
+            async post(endpoint, data) {
+                const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error || 'Network error');
+                }
+                
+                return response.json();
+            }
+        };
+
+        // Form submission
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Hide previous messages
+            successMessage.style.display = 'none';
+            errorMessage.style.display = 'none';
+            
+            // Show loading
+            loadingSpinner.style.display = 'block';
+            
+            // Disable submit button
+            const submitBtn = form.querySelector('.submit-btn');
+            submitBtn.disabled = true;
+            
+            try {
+                // Get form data
+                const formData = new FormData(form);
+                const complaint = {
+                    machineName: formData.get('machineName'),
+                    complaintDescription: formData.get('complaintDescription'),
+                    priority: formData.get('priority')
+                };
+
+                // Submit to MongoDB via API
+                const result = await api.post('/complaints', complaint);
+                
+                // Show success message
+                loadingSpinner.style.display = 'none';
+                document.getElementById('ticketId').textContent = result.ticketId;
+                successMessage.style.display = 'block';
+                
+                // Reset form
+                form.reset();
+                prioritySelect.className = '';
+                
+                console.log('Complaint submitted successfully:', result);
+                
+            } catch (error) {
+                console.error('Error submitting complaint:', error);
+                
+                // Show error message
+                loadingSpinner.style.display = 'none';
+                errorText.textContent = error.message || 'Error submitting complaint. Please try again.';
+                errorMessage.style.display = 'block';
+                
+            } finally {
+                // Re-enable submit button
+                submitBtn.disabled = false;
+            }
+        });
+
+        // Auto-resize textarea
+        const textarea = document.getElementById('complaintDescription');
+        textarea.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+
+        // Check if backend is running
+        async function checkBackendConnection() {
+            try {
+                const response = await fetch(`${API_BASE_URL.replace('/api', '')}/`);
+                if (response.ok) {
+                    console.log('Backend connection successful');
+                } else {
+                    console.warn('Backend might not be running');
+                }
+            } catch (error) {
+                console.warn('Cannot connect to backend. Make sure the server is running on port 3000');
+            }
+        }
+
+        // Check backend connection on page load
+        window.addEventListener('load', checkBackendConnection);
+    </script>
+</body>
+</html>
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maintenance System - Submit Complaint</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 600px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            color: #7f8c8d;
+            font-size: 1.1em;
+        }
+
+        .nav-back {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .nav-back:hover {
+            color: #764ba2;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+
+        input[type="text"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        input[type="text"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+            font-family: inherit;
+        }
+
+        select {
+            cursor: pointer;
+        }
+
+        .priority-high {
+            background-color: #ffebee;
+            border-color: #f44336;
+        }
+
+        .priority-medium {
+            background-color: #fff3e0;
+            border-color: #ff9800;
+        }
+
+        .priority-low {
+            background-color: #e8f5e8;
+            border-color: #4caf50;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.2em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #c3e6cb;
+            display: none;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #f5c6cb;
+            display: none;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .form-animation {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-group:nth-child(1) { animation-delay: 0.1s; }
+        .form-group:nth-child(2) { animation-delay: 0.2s; }
+        .form-group:nth-child(3) { animation-delay: 0.3s; }
+        .form-group:nth-child(4) { animation-delay: 0.4s; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="dashboard.html" class="nav-back">← Back to Dashboard</a>
+        
+        <div class="header">
+            <h1>🔧 Maintenance System</h1>
+            <p>Submit a Machine Complaint</p>
+        </div>
+
+        <div class="success-message" id="successMessage">
+            ✅ Complaint submitted successfully! Ticket ID: <span id="ticketId"></span>
+        </div>
+
+        <div class="error-message" id="errorMessage">
+            ❌ <span id="errorText">Error submitting complaint. Please try again.</span>
+        </div>
+
+        <div class="loading" id="loadingSpinner">
+            <div class="spinner"></div>
+            <p>Submitting complaint...</p>
+        </div>
+
+        <form id="complaintForm">
+            <div class="form-group form-animation">
+                <label for="machineName">Machine Name *</label>
+                <input type="text" id="machineName" name="machineName" required 
+                       placeholder="e.g., Conveyor Belt #3, Hydraulic Press A1">
+            </div>
+
+            <div class="form-group form-animation">
+                <label for="complaintDescription">Complaint Description *</label>
+                <textarea id="complaintDescription" name="complaintDescription" required 
+                          placeholder="Please describe the issue in detail..."></textarea>
+            </div>
+
+            <div class="form-group form-animation">
+                <label for="priority">Priority Level *</label>
+                <select id="priority" name="priority" required>
+                    <option value="">Select Priority</option>
+                    <option value="high">High - Immediate attention required</option>
+                    <option value="medium">Medium - Needs attention soon</option>
+                    <option value="low">Low - Can wait for scheduled maintenance</option>
+                </select>
+            </div>
+
+            <div class="form-group form-animation">
+                <button type="submit" class="submit-btn">Submit Complaint</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // API configuration
+        const API_BASE_URL = 'http://localhost:3000/api';
+
+        // Form elements
+        const form = document.getElementById('complaintForm');
+        const prioritySelect = document.getElementById('priority');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const successMessage = document.getElementById('successMessage');
+        const errorMessage = document.getElementById('errorMessage');
+        const errorText = document.getElementById('errorText');
+
+        // Priority color changes
+        prioritySelect.addEventListener('change', function() {
+            this.className = '';
+            if (this.value === 'high') {
+                this.classList.add('priority-high');
+            } else if (this.value === 'medium') {
+                this.classList.add('priority-medium');
+            } else if (this.value === 'low') {
+                this.classList.add('priority-low');
+            }
+        });
+
+        // API utility functions
+        const api = {
+            async post(endpoint, data) {
+                const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error || 'Network error');
+                }
+                
+                return response.json();
+            }
+        };
+
+        // Form submission
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Hide previous messages
+            successMessage.style.display = 'none';
+            errorMessage.style.display = 'none';
+            
+            // Show loading
+            loadingSpinner.style.display = 'block';
+            
+            // Disable submit button
+            const submitBtn = form.querySelector('.submit-btn');
+            submitBtn.disabled = true;
+            
+            try {
+                // Get form data
+                const formData = new FormData(form);
+                const complaint = {
+                    machineName: formData.get('machineName'),
+                    complaintDescription: formData.get('complaintDescription'),
+                    priority: formData.get('priority')
+                };
+
+                // Submit to MongoDB via API
+                const result = await api.post('/complaints', complaint);
+                
+                // Show success message
+                loadingSpinner.style.display = 'none';
+                document.getElementById('ticketId').textContent = result.ticketId;
+                successMessage.style.display = 'block';
+                
+                // Reset form
+                form.reset();
+                prioritySelect.className = '';
+                
+                console.log('Complaint submitted successfully:', result);
+                
+            } catch (error) {
+                console.error('Error submitting complaint:', error);
+                
+                // Show error message
+                loadingSpinner.style.display = 'none';
+                errorText.textContent = error.message || 'Error submitting complaint. Please try again.';
+                errorMessage.style.display = 'block';
+                
+            } finally {
+                // Re-enable submit button
+                submitBtn.disabled = false;
+            }
+        });
+
+        // Auto-resize textarea
+        const textarea = document.getElementById('complaintDescription');
+        textarea.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+
+        // Check if backend is running
+        async function checkBackendConnection() {
+            try {
+                const response = await fetch(`${API_BASE_URL.replace('/api', '')}/`);
+                if (response.ok) {
+                    console.log('Backend connection successful');
+                } else {
+                    console.warn('Backend might not be running');
+                }
+            } catch (error) {
+                console.warn('Cannot connect to backend. Make sure the server is running on port 3000');
+            }
+        }
+
+        // Check backend connection on page load
+        window.addEventListener('load', checkBackendConnection);
+    </script>
+</body>
+</html>

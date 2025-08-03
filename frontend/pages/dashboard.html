@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maintenance System - Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 3em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .user-info {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 12px;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .user-info strong {
+            font-size: 1.1em;
+        }
+
+        .role-badge {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin-left: 10px;
+        }
+
+        .nav-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .nav-card {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(102, 126, 234, 0.2);
+            padding: 25px;
+            text-decoration: none;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            color: #2c3e50;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .nav-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+            border-color: #667eea;
+        }
+
+        .nav-card h3 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            color: #667eea;
+        }
+
+        .nav-card p {
+            color: #7f8c8d;
+            line-height: 1.5;
+        }
+
+        .nav-card.primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
+        }
+
+        .nav-card.primary h3 {
+            color: white;
+        }
+
+        .nav-card.primary p {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .logout-section {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .logout-btn {
+            background: #f44336;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #d32f2f;
+            transform: translateY(-2px);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: white;
+        }
+
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #d32f2f;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .nav-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Loading State -->
+        <div id="loadingState" class="loading">
+            <div class="spinner"></div>
+            <p>Loading your dashboard...</p>
+        </div>
+
+        <!-- Error State -->
+        <div id="errorState" class="error-message" style="display: none;">
+            <h2>❌ Access Denied</h2>
+            <p>Please login to access your dashboard.</p>
+            <br>
+            <button onclick="redirectToLogin()" class="logout-btn">Go to Login</button>
+        </div>
+
+        <!-- Dashboard -->
+        <div id="dashboard" style="display: none;">
+            <div class="header">
+                <h1>🔧 Maintenance System</h1>
+                <div class="user-info">
+                    <strong id="userName">Loading...</strong>
+                    <span class="role-badge" id="userRole">Loading...</span>
+                </div>
+                <p>Welcome to your personalized dashboard</p>
+            </div>
+
+            <!-- Production Manager Dashboard -->
+            <div id="productionDashboard" style="display: none;">
+                <div class="nav-section">
+                    <h2>🏭 Production Manager Dashboard</h2>
+                    <div class="nav-grid">
+                        <div class="nav-card primary" onclick="goToComplaints()">
+                            <h3>📝 Submit Complaint</h3>
+                            <p>Report machine issues and maintenance requests quickly and efficiently</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Maintenance Manager Dashboard -->
+            <div id="maintenanceDashboard" style="display: none;">
+                <div class="nav-section">
+                    <h2>🔧 Maintenance Manager Dashboard</h2>
+                    <div class="nav-grid">
+                        <div class="nav-card primary" onclick="goToViewComplaints()">
+                            <h3>🛠️ Manage Complaints</h3>
+                            <p>View, update, and resolve all maintenance complaints from production teams</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="logout-section">
+                <button onclick="logout()" class="logout-btn">🚪 Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM elements
+        const loadingState = document.getElementById('loadingState');
+        const errorState = document.getElementById('errorState');
+        const dashboard = document.getElementById('dashboard');
+        const productionDashboard = document.getElementById('productionDashboard');
+        const maintenanceDashboard = document.getElementById('maintenanceDashboard');
+        const userName = document.getElementById('userName');
+        const userRole = document.getElementById('userRole');
+
+        // Get user session
+        function getUserSession() {
+            const userSession = localStorage.getItem('userSession');
+            if (userSession) {
+                try {
+                    const userData = JSON.parse(userSession);
+                    
+                    // Check if session is still valid (less than 24 hours old)
+                    const loginTime = new Date(userData.loginTime);
+                    const now = new Date();
+                    const hoursDiff = (now - loginTime) / (1000 * 60 * 60);
+                    
+                    if (hoursDiff < 24) {
+                        return userData;
+                    } else {
+                        // Session expired, clear it
+                        localStorage.removeItem('userSession');
+                        return null;
+                    }
+                } catch (error) {
+                    // Invalid session data, clear it
+                    localStorage.removeItem('userSession');
+                    return null;
+                }
+            }
+            return null;
+        }
+
+        // Display dashboard
+        function displayDashboard(userData) {
+            console.log('Displaying dashboard for user:', userData);
+            
+            // Hide loading and error
+            loadingState.style.display = 'none';
+            errorState.style.display = 'none';
+            
+            // Show dashboard
+            dashboard.style.display = 'block';
+            
+            // Update user info
+            userName.textContent = userData.fullName;
+            userRole.textContent = userData.role === 'production' ? 'Production Manager' : 'Maintenance Manager';
+            
+            // Show appropriate dashboard based on role
+            if (userData.role === 'production') {
+                console.log('Showing production dashboard');
+                productionDashboard.style.display = 'block';
+                maintenanceDashboard.style.display = 'none';
+            } else if (userData.role === 'maintenance') {
+                console.log('Showing maintenance dashboard');
+                productionDashboard.style.display = 'none';
+                maintenanceDashboard.style.display = 'block';
+            } else {
+                console.log('Unknown role:', userData.role);
+                showError();
+            }
+        }
+
+        // Show error state
+        function showError() {
+            loadingState.style.display = 'none';
+            dashboard.style.display = 'none';
+            errorState.style.display = 'block';
+        }
+
+        // Navigation functions
+        function goToComplaints() {
+            console.log('Navigating to complaints page');
+            console.log('Current URL:', window.location.href);
+            console.log('Attempting to navigate to: complaints.html');
+            // Use relative path - same directory
+            window.location.href = 'complaints.html';
+        }
+
+        function goToViewComplaints() {
+            console.log('Navigating to view complaints page');
+            console.log('Current URL:', window.location.href);
+            console.log('Attempting to navigate to: view-complaints.html');
+            // Use relative path - same directory
+            window.location.href = 'view-complaints.html';
+        }
+
+        function redirectToLogin() {
+            console.log('Redirecting to login');
+            window.location.href = 'login.html';
+        }
+
+        // Logout function
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                // Clear user session
+                localStorage.removeItem('userSession');
+                
+                // Redirect to login page
+                window.location.href = 'login.html';
+            }
+        }
+
+        // Initialize dashboard
+        function initializeDashboard() {
+            console.log('Initializing dashboard...');
+            
+            const userData = getUserSession();
+            console.log('User session data:', userData);
+            
+            if (userData) {
+                displayDashboard(userData);
+            } else {
+                console.log('No valid user session found');
+                showError();
+            }
+        }
+
+        // Run initialization after page loads
+        window.addEventListener('load', () => {
+            console.log('=== DASHBOARD DEBUG ===');
+            console.log('Dashboard page loaded');
+            console.log('Current URL:', window.location.href);
+            console.log('User session in localStorage:', localStorage.getItem('userSession'));
+            
+            // Small delay to show loading animation
+            setTimeout(initializeDashboard, 1000);
+        });
+
+        // Check for session changes
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'userSession') {
+                initializeDashboard();
+            }
+        });
+    </script>
+</body>
+</html>
